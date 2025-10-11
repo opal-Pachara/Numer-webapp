@@ -1,7 +1,5 @@
 import { useState } from "react";
 import { parse, evaluate } from "mathjs";
-import { BlockMath } from "react-katex";
-import "katex/dist/katex.min.css";
 
 function Falseposition() {
   const [xr, setXr] = useState("");

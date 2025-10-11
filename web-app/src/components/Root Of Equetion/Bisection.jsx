@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { parse, evaluate } from "mathjs";
+import { LinearScale } from "chart.js";
 
-function Bisection() {
+function App() {
   const [xr, setXr] = useState("");
   const [xl, setXl] = useState("");
   const [fx, setFx] = useState("");
-  const [result, setResult] = useState(null);
+  const [steps, setSteps] = useState([]);
+  // const [result, setResult] = useState(null);
 
   const Bisection = () => {
     let xlValue = parseFloat(xl);
@@ -32,6 +34,9 @@ function Bisection() {
     let xmold;
     let epsilon;
 
+    let result = [];
+    let iter = 1;
+
     do {
       if (fxm * fxr >= 0) {
         xrValue = xm;
@@ -43,10 +48,22 @@ function Bisection() {
       xm = (xlValue + xrValue) / 2;
       fxm = f(xm);
       epsilon = Math.abs((xm - xmold) / xm) * 100;
+
+      result.push({
+        iteration: iter,
+        xl: xlValue,
+        xr: xrValue,
+        xm: xm,
+        epsilon,
+      });
+
+      iter++;
+      if (iter > 50) break;
     } while (epsilon >= 0.000001);
+    setSteps(result);
     {
     }
-    setResult(xm.toFixed(6));
+    // setResult(xm);
   };
 
   return (
@@ -74,9 +91,31 @@ function Bisection() {
       />
 
       <button onClick={Bisection}></button>
-
-      <h1>{result}</h1>
+      {steps.length > 0 && (
+        <table border="1">
+          <thead>
+            <tr>
+              <th>Iteration</th>
+              <th>XL</th>
+              <th>XR</th>
+              <th>XM</th>
+              <th>Eror (%)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {steps.map((s, index) => (
+              <tr key={index}>
+                <td>{s.iteration}</td>
+                <td>{s.xl.toPrecision(7)}</td>
+                <td>{s.xr.toPrecision(7)}</td>
+                <td>{s.xm.toPrecision(7)}</td>
+                <td>{s.epsilon.toFixed(6)}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }
-export default Bisection;
+export default App;
