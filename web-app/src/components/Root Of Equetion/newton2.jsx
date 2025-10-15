@@ -1,12 +1,13 @@
-import { useState } from "react";
-import { parse, evaluate, derivative } from "mathjs";
+import { useState, useEffect } from "react";
+import { evaluate, parse, derivative } from "mathjs";
+import Plot from "react-plotly.js";
 
-function Newtonraphson() {
-  const [x, setX] = useState("");
+function Newton2() {
   const [fx, setFx] = useState("");
+  const [x, setX] = useState("");
   const [steps, setSteps] = useState([]);
 
-  const Calnewton = () => {
+  const Calnewton2 = () => {
     let xValue = parseFloat(x);
 
     if (isNaN(xValue)) {
@@ -49,35 +50,32 @@ function Newtonraphson() {
       if (iter > 50) break;
     } while (epsilon >= 0.000001 && Math.abs(fx0) >= 0.000001);
     setSteps(result);
-    {
-    }
   };
+  {
+  }
 
   return (
     <div>
-      <h1>Newton Raphson</h1>
+      <h1>Newton 2</h1>
+
       <input
         type="text"
         value={fx}
         onChange={(e) => setFx(e.target.value)}
-        placeholder="Equetion F(x)"
+        placeholder="F(x)"
       />
 
       <input
         type="text"
         value={x}
         onChange={(e) => setX(e.target.value)}
-        placeholder="x"
+        placeholder="X"
       />
 
-      <button onClick={Calnewton}>Calculate</button>
+      <button onClick={Calnewton2}>Calculate</button>
+
       {steps.length > 0 && (
-        <table
-          display="Block"
-          overflow-x="auto"
-          white-space="nowrap"
-          border="1"
-        >
+        <table border="1px">
           <thead>
             <tr>
               <th>Iteration</th>
@@ -96,7 +94,35 @@ function Newtonraphson() {
           </tbody>
         </table>
       )}
+
+      <Plot
+        data={[
+          {
+            x: steps.map((s) => s.iteration),
+            y: steps.map((s) => s.epsilon),
+            type: "scatter",
+            mode: "lines+markers",
+            marker: { color: "red" },
+            name: "Eror(%)",
+            customdata: steps.map((s) => s.x.toPrecision(7)),
+            hovertemplate:
+              "Error: %{y}<br>X: %{customdata}<br>Iteration: %{x}<extra></extra>",
+          },
+        ]}
+        layout={{
+          title: "Error per Iteration",
+          xaxis: {
+            title: "Iteration",
+            dtick: 1,
+          },
+          yaxis: {
+            title: "Error (%)",
+            // type: "log"
+          },
+        }}
+        config={{ responsive: true, displaylogo: true }}
+      />
     </div>
   );
 }
-export default Newtonraphson;
+export default Newton2;

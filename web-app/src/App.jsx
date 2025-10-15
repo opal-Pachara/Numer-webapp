@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { parse, evaluate } from "mathjs";
-import { LinearScale } from "chart.js";
 
 function App() {
   const [xr, setXr] = useState("");
