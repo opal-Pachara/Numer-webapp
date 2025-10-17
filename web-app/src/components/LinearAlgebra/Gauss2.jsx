@@ -1,8 +1,7 @@
-import { index } from "mathjs";
 import { useState } from "react";
 import Plot from "react-plotly.js";
 
-function GaussJordan() {
+function Gauus2() {
   const [a11, setA11] = useState("");
   const [a12, setA12] = useState("");
   const [a13, setA13] = useState("");
@@ -18,67 +17,45 @@ function GaussJordan() {
   const [b3, setB3] = useState("");
 
   const [result, setResult] = useState(null);
-
   const calGauss = () => {
     let A = [
       [a11, a12, a13],
       [a21, a22, a23],
       [a31, a32, a33],
     ];
+    // 0    1    2
+    // 0[a11(0,0), a12(0,1), a13(0,2)], b1
+    // 1[0(1,0), a22(1,1), a23(1,2)], b2
+    // 2[0(2,0), 0(2,1), a33(2,2)], b3
 
     let B = [b1, b2, b3];
 
-    let factor = A[0][0];
-    A[0][1] /= factor;
-    A[0][2] /= factor;
-    B[0] /= factor;
-    A[0][0] = 1;
-
-    let eli21 = A[1][0];
+    let eli21 = A[1][0] / A[0][0];
+    A[1][0] = 0;
     A[1][1] -= eli21 * A[0][1];
     A[1][2] -= eli21 * A[0][2];
     B[1] -= eli21 * B[0];
-    A[1][0] = 0;
 
-    let eli31 = A[2][0];
+    let eli31 = A[2][0] / A[0][0];
+    A[2][0] = 0;
     A[2][1] -= eli31 * A[0][1];
     A[2][2] -= eli31 * A[0][2];
     B[2] -= eli31 * B[0];
-    A[2][0] = 0;
 
-    factor = A[1][1];
-    A[1][2] /= factor;
-    B[1] /= factor;
-    A[1][1] = 1;
-
-    let eli12 = A[0][1];
-    A[0][2] -= eli12 * A[1][2];
-    B[0] -= eli12 * B[1];
-    A[0][1] = 0;
-
-    let eli32 = A[2][1];
+    let eli32 = A[2][1] / A[1][1];
+    A[2][1] = 0;
     A[2][2] -= eli32 * A[1][2];
     B[2] -= eli32 * B[1];
-    A[2][1] = 0;
 
-    factor = A[2][2];
-    B[2] /= factor;
-    A[2][2] = 1;
+    let z = B[2] / A[2][2];
+    let y = (B[1] - A[1][2] * z) / A[1][1];
+    let x = (B[0] - A[0][1] * y - A[0][2] * z) / A[0][0];
 
-    let eli13 = A[0][2];
-    B[0] -= eli13 * B[2];
-    A[0][2] = 0;
-
-    let eli23 = A[1][2];
-    B[1] -= eli23 * B[2];
-    A[1][2] = 0;
-
-    setResult([B[0], B[1], B[2]]);
+    setResult([x, y, z]);
   };
   return (
     <div>
-      <h1>Gauss Jordan</h1>
-
+      <h1>Gauss 2</h1>
       <input
         type="number"
         value={a11}
@@ -155,21 +132,12 @@ function GaussJordan() {
       />
 
       <button onClick={calGauss}>Calculate</button>
-      {result && result.length > 0 && (
-        <table>
-          <thead>
-            <tr>
-              <th>X</th>
-            </tr>
-          </thead>
-          <tbody>
-            {result.map((s, index) => (
-              <tr key={index}>
-                <td>{s}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      {result && (
+        <div>
+          <p>x1 = {result[0]}</p>
+          <p>x2 = {result[1]}</p>
+          <p>x3 = {Math.round(result[2])}</p>
+        </div>
       )}
       <Plot
         data={[
@@ -183,4 +151,4 @@ function GaussJordan() {
     </div>
   );
 }
-export default GaussJordan;
+export default Gauus2;
