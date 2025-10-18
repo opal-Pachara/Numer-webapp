@@ -22,7 +22,7 @@ function GaussEliminate() {
     const A = [
       // 0   1   2
       [a11, a12, a13], //0
-      [a21, a22, a23], //1
+      [a21, a22, a23], //1 
       [a31, a32, a33], //2
     ];
 
