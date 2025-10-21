@@ -89,51 +89,52 @@ function Newton() {
       <button onClick={fetchEquation}>Fetch</button>
 
       {steps.length > 0 && (
-        <table border="1px">
-          <thead>
-            <tr>
-              <th>Iteration</th>
-              <th>X</th>
-              <th>Eror (%)</th>
-            </tr>
-          </thead>
-          <tbody>
-            {steps.map((s, index) => (
-              <tr key={index}>
-                <td>{s.iteration}</td>
-                <td>{s.x.toPrecision(7)}</td>
-                <td>{s.epsilon.toPrecision(7)}</td>
+        <div>
+          <table border="1px">
+            <thead>
+              <tr>
+                <th>Iteration</th>
+                <th>X</th>
+                <th>Eror (%)</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {steps.map((s, index) => (
+                <tr key={index}>
+                  <td>{s.iteration}</td>
+                  <td>{s.x.toPrecision(7)}</td>
+                  <td>{s.epsilon.toPrecision(7)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          <Plot
+            data={[
+              {
+                x: steps.map((s) => s.iteration),
+                y: steps.map((s) => s.epsilon),
+                type: "scatter",
+                mode: "lines+markers",
+                marker: { color: "red" },
+                name: "Eror(%)",
+                customdata: steps.map((s) => s.x.toPrecision(7)),
+                hovertemplate:
+                  "Error: %{y}<br>X: %{customdata}<br>Iteration: %{x}<extra></extra>",
+              },
+            ]}
+            layout={{
+              title: "Error per Iteration",
+              xaxis: {
+                title: "Iteration",
+                dtick: 1,
+              },
+              yaxis: {
+                title: "Error (%)",
+              },
+            }}
+          />
+        </div>
       )}
-
-      <Plot
-        data={[
-          {
-            x: steps.map((s) => s.iteration),
-            y: steps.map((s) => s.epsilon),
-            type: "scatter",
-            mode: "lines+markers",
-            marker: { color: "red" },
-            name: "Eror(%)",
-            customdata: steps.map((s) => s.x.toPrecision(7)),
-            hovertemplate:
-              "Error: %{y}<br>X: %{customdata}<br>Iteration: %{x}<extra></extra>",
-          },
-        ]}
-        layout={{
-          title: "Error per Iteration",
-          xaxis: {
-            title: "Iteration",
-            dtick: 1,
-          },
-          yaxis: {
-            title: "Error (%)",
-          },
-        }}
-      />
     </div>
   );
 }

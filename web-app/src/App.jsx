@@ -1,120 +1,48 @@
-import { useState } from "react";
-import { parse, evaluate } from "mathjs";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Home from "./components/Home";
+import Newton from "./components/Root Of Equetion/Newtonraphson";
+import Bisection from "./components/Root Of Equetion/Bisection";
+import FalsePosition from "./components/Root Of Equetion/Falseposition";
+import OnePoint from "./components/Root Of Equetion/Onepoint";
+import Secant from "./components/Root Of Equetion/secant";
+import Lagrange from "./components/Interpolation/largrang";
+import Regression from "./components/Interpolation/regreesion";
+import GaussElimination from "./components/LinearAlgebra/Gausselimination";
+import GaussJordan from "./components/LinearAlgebra/Gaussjordan";
+// import LUDecomposition from "./components/LinearAlgebra/LUDecomposition";
+// import MatrixInversion from "./components/LinearAlgebra/Matrixinversion";
+import CramerRule from "./components/LinearAlgebra/Carmerrule";
+// import Cholesky from "./components/LinearAlgebra/Choleskey";
+import SimpsonRule from "./components/NumerIntegration/SimpsonRule";
 
-function App() {
-  const [xr, setXr] = useState("");
-  const [xl, setXl] = useState("");
-  const [fx, setFx] = useState("");
-  const [steps, setSteps] = useState([]);
-  // const [result, setResult] = useState(null);
-
-  const Bisection = () => {
-    let xlValue = parseFloat(xl);
-    let xrValue = parseFloat(xr);
-
-    if (isNaN(xlValue) || isNaN(xrValue)) {
-      alert("pleae input number");
-      return;
-    }
-
-    let expr;
-    try {
-      expr = parse(fx);
-    } catch (err) {
-      alert("wrong equetion");
-      return;
-    }
-
-    const f = (x) => expr.evaluate({ x });
-
-    let xm = (xlValue + xrValue) / 2;
-    let fxm = f(xm);
-    let fxr = f(xrValue);
-    let xmold;
-    let epsilon;
-
-    let result = [];
-    let iter = 1;
-
-    do {
-      if (fxm * fxr >= 0) {
-        xrValue = xm;
-      } else {
-        xlValue = xm;
-      }
-
-      xmold = xm;
-      xm = (xlValue + xrValue) / 2;
-      fxm = f(xm);
-      epsilon = Math.abs((xm - xmold) / xm) * 100;
-
-      result.push({
-        iteration: iter,
-        xl: xlValue,
-        xr: xrValue,
-        xm: xm,
-        epsilon,
-      });
-
-      iter++;
-      if (iter > 50) break;
-    } while (epsilon >= 0.000001);
-    setSteps(result);
-    {
-    }
-    // setResult(xm);
-  };
-
+export default function App() {
   return (
-    <div>
-      <h1>Bisection</h1>
-      <input
-        type="text"
-        value={fx}
-        onChange={(e) => setFx(e.target.value)}
-        placeholder="Enter Equetion"
-      />
-
-      <input
-        type="text"
-        value={xl}
-        onChange={(e) => setXl(e.target.value)}
-        placeholder="Enter XL"
-      />
-
-      <input
-        type="text"
-        value={xr}
-        onChange={(e) => setXr(e.target.value)}
-        placeholder="Enter XR"
-      />
-
-      <button onClick={Bisection}></button>
-      {steps.length > 0 && (
-        <table border="1">
-          <thead>
-            <tr>
-              <th>Iteration</th>
-              <th>XL</th>
-              <th>XR</th>
-              <th>XM</th>
-              <th>Eror (%)</th>
-            </tr>
-          </thead>
-          <tbody>
-            {steps.map((s, index) => (
-              <tr key={index}>
-                <td>{s.iteration}</td>
-                <td>{s.xl.toPrecision(7)}</td>
-                <td>{s.xr.toPrecision(7)}</td>
-                <td>{s.xm.toPrecision(7)}</td>
-                <td>{s.epsilon.toFixed(6)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        
+        {/* Root Of Equation */}
+        <Route path="/root-of-equation/newton" element={<Newton />} />
+        <Route path="/root-of-equation/bisection" element={<Bisection />} />
+        <Route path="/root-of-equation/false-position" element={<FalsePosition />} />
+        <Route path="/root-of-equation/one-point" element={<OnePoint />} />
+        <Route path="/root-of-equation/secant" element={<Secant />} />
+        
+        {/* Interpolation */}
+        <Route path="/interpolation/lagrange" element={<Lagrange />} />
+        <Route path="/interpolation/regression" element={<Regression />} />
+        
+        {/* Linear Algebra */}
+        <Route path="/linear-algebra/gauss-elimination" element={<GaussElimination />} />
+        <Route path="/linear-algebra/gauss-jordan" element={<GaussJordan />} />
+        {/* <Route path="/linear-algebra/lu-decomposition" element={<LUDecomposition />} /> */}
+        {/* <Route path="/linear-algebra/matrix-inversion" element={<MatrixInversion />} /> */}
+        <Route path="/linear-algebra/cramer-rule" element={<CramerRule />} />
+        {/* <Route path="/linear-algebra/cholesky" element={<Cholesky />} /> */}
+        
+        {/* Numerical Integration */}
+        <Route path="/numerical-integration/simpson" element={<SimpsonRule />} />
+      </Routes>
+    </Router>
   );
 }
-export default App;
