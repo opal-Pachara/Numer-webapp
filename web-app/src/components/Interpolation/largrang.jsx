@@ -1,3 +1,4 @@
+import { re } from "mathjs";
 import { useState } from "react";
 import Plot from "react-plotly.js";
 
@@ -119,14 +120,6 @@ function Largrange() {
           <Plot
             data={[
               {
-                x: result.xArr,
-                y: result.yArr,
-                type: "scatter",
-                mode: "lines+markers",
-                name: "Points",
-                marker: { color: "black", size: 8 },
-              },
-              {
                 x: [result.xiValue],
                 y: [result.value],
                 type: "scatter",
@@ -139,14 +132,14 @@ function Largrange() {
                 y: L.map((val) => val * result.yArr[i]),
                 type: "scatter",
                 mode: "lines+marker",
-                name: `L${i}`,
+                name: "L${i}",
                 line: { width: 2 },
               })),
             ]}
             layout={{
               shapes: [
                 {
-                  type: "line",
+                  type: "lines",
                   x0: result.xiValue,
                   x1: result.xiValue,
                   y0: 0,

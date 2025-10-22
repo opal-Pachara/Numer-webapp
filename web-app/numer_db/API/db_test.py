@@ -33,7 +33,7 @@ def random_equation(method_name: str):
     conn.close()
 
     chosen = random.choice(rows)  
-    raw = chosen.get("inputs") or {}
+    raw = chosen.get("inputs")
 
     try:
         inputs = json.loads(raw) if isinstance(raw, str) else raw
