@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { evaluate, parse, derivative } from "mathjs";
 import Plot from "react-plotly.js";
+import axios from "axios";
 
 function Newton() {
   const [fx, setFx] = useState("");
@@ -9,10 +10,10 @@ function Newton() {
 
   const fetchEquation = async () => {
     try {
-      const res = await fetch(
-        "http://127.0.0.1:8000/equation/random/Newton-Raphson"
+      const res = await axios.get(
+        "http://localhost:8000/equation/random/Newton-raphson"
       );
-      const data = await res.json();
+      const data = res.data;
       setFx(data.inputs.FX);
       setX(data.inputs.X);
     } catch (err) {

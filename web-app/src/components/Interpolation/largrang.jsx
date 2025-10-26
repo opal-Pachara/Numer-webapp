@@ -1,6 +1,7 @@
 import { re } from "mathjs";
 import { useState } from "react";
 import Plot from "react-plotly.js";
+import axios from "axios";
 
 function Largrange() {
   const [n, setN] = useState("");
@@ -11,8 +12,10 @@ function Largrange() {
 
   const fetchEquation = async () => {
     try {
-      const res = await fetch("http://127.0.0.1:8000/equation/random/Lagrange");
-      const data = await res.json();
+      const res = await axios.get(
+        "http://localhost:8000/equation/random/Lagrange"
+      );
+      const data = res.data;
       setN(data.inputs.N);
       setX(data.inputs.X.join(","));
       setY(data.inputs.Y.join(","));
